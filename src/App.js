@@ -141,13 +141,14 @@ export default function AasanPay(){
 
   useEffect(()=>{ if(view==="admin") load(); },[view]);
 
-  async function submit(e){
-    e.preventDefault();
-    if(!agreed){
-      alert("Terms & Conditions accept karein!");
-      return;
-    }
-    setSubmitting(true);
+ async function submit(e){
+  e.preventDefault();
+  if(!agreed){ 
+    alert("Terms check karein!"); 
+    return; 
+  }
+  setView("payment");
+}
     try{
       const ref=await addDoc(collection(db,"applications"),{
         ...form,
