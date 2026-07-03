@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import {
-  getFirestore, collection, addDoc,
+  initializeFirestore, collection, addDoc,
   getDocs, doc, updateDoc, query, orderBy
 } from "firebase/firestore";
+
+const db = initializeFirestore(firebaseApp, {
+  experimentalAutoDetectLongPolling: true,
+});
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
 } from "firebase/auth";
