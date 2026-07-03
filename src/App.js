@@ -158,26 +158,33 @@ export default function AasanPay(){
 
   useEffect(()=>{ if(view==="admin" && authUser) load(); },[view,authUser]);
 
-  async function submit(e){
-    e.preventDefault();
-    if(!agreed){ alert("Terms & Conditions accept karein!"); return; }
-    setSubmitting(true);
-    try{
-      const ref=await addDoc(collection(db,"applications"),{
-        ...form,
-        status:"Pending",
-        tid:"",
-        agreedToTerms:true,
-        submittedAt:Date.now()
-      });
-      setLastDocId(ref.id);
-      setView("payment");
-    }catch(err){
-      alert("Submit error: "+err.message);
-      console.error(err);
-    }
+async function submit(e){
+  e.preventDefault();
+  if(!agreed){ alert("Terms & Conditions accept karein!"); return; }
+  setSubmitting(true);
+  try{
+    const writePromise = addDoc(collection(db,"applications"),{
+      ...form,
+      status:"Pending",
+      tid:"",
+      agreedToTerms:true,
+      submittedAt:Date.now()
+    });
+
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("TIMEOUT: Firestore ne 15 second mein response nahi diya. Network/firewall issue ho sakta hai.")), 15000)
+    );
+
+    const ref = await Promise.race([writePromise, timeoutPromise]);
+    setLastDocId(ref.id);
+    setView("payment");
+  }catch(err){
+    alert("Submit error: " + err.message);
+    console.error("SUBMIT FAILED:", err);
+  }finally{
     setSubmitting(false);
   }
+}
 
   async function confirmPayment(){
     if(!tid.trim()){ alert("Transaction ID likhein!"); return; }
