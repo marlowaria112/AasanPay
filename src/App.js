@@ -4,10 +4,6 @@ import {
   initializeFirestore, collection, addDoc,
   getDocs, doc, updateDoc, query, orderBy
 } from "firebase/firestore";
-
-const db = initializeFirestore(firebaseApp, {
-  experimentalAutoDetectLongPolling: true,
-});
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
 } from "firebase/auth";
@@ -29,7 +25,10 @@ const firebaseConfig = {
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
-const db = getFirestore(firebaseApp);
+const db = initializeFirestore(firebaseApp, {
+  experimentalAutoDetectLongPolling: true,
+});
+const auth = getAuth(firebaseApp);
 const auth = getAuth(firebaseApp);
 
 const FONT = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');`;
