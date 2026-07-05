@@ -1,3 +1,5 @@
+
+```javascript
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import {
@@ -72,7 +74,7 @@ const ALL_REVIEWS = [
 ];
 
 const JAZZCASH = "0300-5004040";
-const Shahnawaz = "AasanPay Verification";
+const ACCOUNT_TITLE = "AasanPay Verification";
 
 function generateAppId() {
   const year = new Date().getFullYear();
@@ -210,37 +212,36 @@ export default function AasanPay(){
   useEffect(()=>{ if(view==="admin"&&authUser) load(); },[view,authUser]);
 
   async function submit(e){
-  e.preventDefault();
-  if(!agreed){ alert("Terms accept karein!"); return; }
-  setSubmitting(true);
-  const newAppId = generateAppId();
-  try{
-    const docData = {
-      fullName: form.fullName,
-      cnic: form.cnic,
-      phone: form.phone,
-      city: form.city,
-      category: form.category,
-      purpose: form.purpose,
-      loanAmount: form.loanAmount,
-      tenure: form.tenure,
-      easypaisa: form.easypaisa,
-      applicationId: newAppId,
-      status: "Pending",
-      tid: "",
-      agreedToTerms: true,
-      submittedAt: Date.now()
-    };
-    const ref = await addDoc(collection(db, "applications"), docData);
-    setLastDocId(ref.id);
-    setAppId(newAppId);
-    setView("payment");
-  }catch(err){
-    alert("Error: " + err.message);
-    console.error("Submit error:", err);
-  }
-  setSubmitting(false);
-}
+    e.preventDefault();
+    if(!agreed){ alert("Terms accept karein!"); return; }
+    setSubmitting(true);
+    const newAppId = generateAppId();
+    try{
+      const docData = {
+        fullName: form.fullName,
+        cnic: form.cnic,
+        phone: form.phone,
+        city: form.city,
+        category: form.category,
+        purpose: form.purpose,
+        loanAmount: form.loanAmount,
+        tenure: form.tenure,
+        easypaisa: form.easypaisa,
+        applicationId: newAppId,
+        status: "Pending",
+        tid: "",
+        agreedToTerms: true,
+        submittedAt: Date.now()
+      };
+      const ref = await addDoc(collection(db, "applications"), docData);
+      setLastDocId(ref.id);
+      setAppId(newAppId);
+      setView("payment");
+    }catch(err){
+      alert("Error: " + err.message);
+      console.error("Submit error:", err);
+    }
+    setSubmitting(false);
   }
 
   async function confirmPayment(){
@@ -325,7 +326,7 @@ export default function AasanPay(){
         </div>
       </nav>
 
-      {/* ═══ LANDING ═══ */}
+      {/* LANDING */}
       {view==="landing"&&<>
 
         {/* HERO */}
@@ -619,7 +620,7 @@ export default function AasanPay(){
         </footer>
       </>}
 
-      {/* ═══ STATUS CHECK ═══ */}
+      {/* STATUS CHECK */}
       {view==="status"&&(
         <div style={{maxWidth:560,margin:"0 auto",padding:"50px 24px 100px"}}>
           <button onClick={()=>setView("landing")} style={B({background:"#F1F5F9",color:"#374151",padding:"8px 16px",fontSize:13,marginBottom:28,display:"flex",alignItems:"center",gap:6})}>
@@ -709,7 +710,7 @@ export default function AasanPay(){
         </div>
       )}
 
-      {/* ═══ TERMS ═══ */}
+      {/* TERMS */}
       {view==="terms"&&(
         <div style={{maxWidth:700,margin:"0 auto",padding:"40px 24px 100px"}}>
           <button onClick={()=>setView("landing")} style={B({background:"#F1F5F9",color:"#374151",padding:"8px 16px",fontSize:13,marginBottom:24,display:"flex",alignItems:"center",gap:6})}>Back</button>
@@ -763,7 +764,7 @@ export default function AasanPay(){
         </div>
       )}
 
-      {/* ═══ APPLY ═══ */}
+      {/* APPLY */}
       {view==="apply"&&(
         <div style={{maxWidth:540,margin:"0 auto",padding:"44px 24px 100px"}}>
           <div style={{textAlign:"center",marginBottom:28}}>
@@ -832,7 +833,7 @@ export default function AasanPay(){
         </div>
       )}
 
-      {/* ═══ PAYMENT ═══ */}
+      {/* PAYMENT */}
       {view==="payment"&&(
         <div style={{maxWidth:520,margin:"0 auto",padding:"50px 24px 100px"}}>
           <div style={{textAlign:"center",marginBottom:28}}>
@@ -904,7 +905,7 @@ export default function AasanPay(){
         </div>
       )}
 
-      {/* ═══ DONE ═══ */}
+      {/* DONE */}
       {view==="done"&&(
         <div style={{maxWidth:520,margin:"0 auto",padding:"70px 24px 100px",textAlign:"center"}}>
           <div style={{width:80,height:80,borderRadius:"50%",background:"#F0FDF4",border:"2px solid #BBF7D0",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 20px"}}>
@@ -953,7 +954,7 @@ export default function AasanPay(){
         </div>
       )}
 
-      {/* ═══ ADMIN LOGIN ═══ */}
+      {/* ADMIN LOGIN */}
       {view==="admin-login"&&(
         <div style={{maxWidth:380,margin:"0 auto",padding:"100px 24px",textAlign:"center"}}>
           <div style={{width:56,height:56,borderRadius:14,background:"#F0FDFA",display:"flex",alignItems:"center",justifyContent:"center",margin:"0 auto 16px",border:"1px solid #A7F3D0"}}>
@@ -976,7 +977,7 @@ export default function AasanPay(){
         </div>
       )}
 
-      {/* ═══ ADMIN ═══ */}
+      {/* ADMIN */}
       {view==="admin"&&(
         authChecked&&!authUser?(
           <div style={{textAlign:"center",padding:100,color:"#9CA3AF"}}>Redirecting...</div>
@@ -1047,7 +1048,7 @@ export default function AasanPay(){
         )
       )}
 
-      {/* ═══ MODAL ═══ */}
+      {/* MODAL */}
       {sel&&view==="admin"&&authUser&&(
         <div onClick={()=>setSel(null)} style={{position:"fixed",inset:0,background:"rgba(15,23,42,.5)",backdropFilter:"blur(6px)",display:"flex",alignItems:"center",justifyContent:"center",padding:20,zIndex:50}}>
           <div onClick={e=>e.stopPropagation()} style={{background:"#FFF",borderRadius:20,padding:28,maxWidth:540,width:"100%",boxShadow:"0 25px 60px rgba(0,0,0,.2)",maxHeight:"90vh",overflowY:"auto"}}>
@@ -1103,3 +1104,4 @@ export default function AasanPay(){
     </div>
   );
 }
+```
