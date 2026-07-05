@@ -210,26 +210,37 @@ export default function AasanPay(){
   useEffect(()=>{ if(view==="admin"&&authUser) load(); },[view,authUser]);
 
   async function submit(e){
-    e.preventDefault();
-    if(!agreed){ alert("Terms & Conditions accept karein!"); return; }
-    setSubmitting(true);
-    const newAppId = generateAppId();
-    try{
-      const ref=await addDoc(collection(db,"applications"),{
-        ...form,
-        applicationId: newAppId,
-        status:"Pending",
-        tid:"",
-        agreedToTerms:true,
-        submittedAt:Date.now()
-      });
-      setLastDocId(ref.id);
-      setAppId(newAppId);
-      setView("payment");
-    }catch(err){
-      alert("Submit error: "+err.message);
-    }
-    setSubmitting(false);
+  e.preventDefault();
+  if(!agreed){ alert("Terms accept karein!"); return; }
+  setSubmitting(true);
+  const newAppId = generateAppId();
+  try{
+    const docData = {
+      fullName: form.fullName,
+      cnic: form.cnic,
+      phone: form.phone,
+      city: form.city,
+      category: form.category,
+      purpose: form.purpose,
+      loanAmount: form.loanAmount,
+      tenure: form.tenure,
+      easypaisa: form.easypaisa,
+      applicationId: newAppId,
+      status: "Pending",
+      tid: "",
+      agreedToTerms: true,
+      submittedAt: Date.now()
+    };
+    const ref = await addDoc(collection(db, "applications"), docData);
+    setLastDocId(ref.id);
+    setAppId(newAppId);
+    setView("payment");
+  }catch(err){
+    alert("Error: " + err.message);
+    console.error("Submit error:", err);
+  }
+  setSubmitting(false);
+}
   }
 
   async function confirmPayment(){
