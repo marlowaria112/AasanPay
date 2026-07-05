@@ -31,7 +31,7 @@ const firebaseApp = initializeApp(firebaseConfig);
 const db = getFirestore(firebaseApp);
 const auth = getAuth(firebaseApp);
 
-const FONT = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');`;
+const FONT = "@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');";
 
 const STATUS = {
   Pending:   { bg:"#FFF7ED", fg:"#EA580C", bd:"#FDBA74", label:"Under Review" },
