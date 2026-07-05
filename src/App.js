@@ -16,12 +16,12 @@ import {
 } from "lucide-react";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCwt-pj6QUItIOM0KbS-CejZH8kRdzlEus",
-  authDomain: "aasanpay-9c3a0.firebaseapp.com",
-  projectId: "aasanpay-9c3a0",
-  storageBucket: "aasanpay-9c3a0.firebasestorage.app",
-  messagingSenderId: "925086196881",
-  appId: "1:925086196881:web:c1c4ec954868109e52cb30",
+  apiKey: "AIzaSyBGIr-D9LUy6H3Lu8HPFx2Yw7v0-YaLr6g",
+  authDomain: "aasanpay-v2.firebaseapp.com",
+  projectId: "aasanpay-v2",
+  storageBucket: "aasanpay-v2.firebasestorage.app",
+  messagingSenderId: "535933204500",
+  appId: "1:535933204500:web:3e9b0a8d840b9de9d4cf01",
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
@@ -160,33 +160,33 @@ export default function AasanPay(){
 
   useEffect(()=>{ if(view==="admin" && authUser) load(); },[view,authUser]);
 
-async function submit(e){
-  e.preventDefault();
-  if(!agreed){ alert("Terms & Conditions accept karein!"); return; }
-  setSubmitting(true);
-  try{
-    const writePromise = addDoc(collection(db,"applications"),{
-      ...form,
-      status:"Pending",
-      tid:"",
-      agreedToTerms:true,
-      submittedAt:Date.now()
-    });
+  async function submit(e){
+    e.preventDefault();
+    if(!agreed){ alert("Terms & Conditions accept karein!"); return; }
+    setSubmitting(true);
+    try{
+      const writePromise = addDoc(collection(db,"applications"),{
+        ...form,
+        status:"Pending",
+        tid:"",
+        agreedToTerms:true,
+        submittedAt:Date.now()
+      });
 
-    const timeoutPromise = new Promise((_, reject) =>
-      setTimeout(() => reject(new Error("TIMEOUT: Firestore ne 15 second mein response nahi diya. Network/firewall issue ho sakta hai.")), 15000)
-    );
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("TIMEOUT: Firestore ne 15 second mein response nahi diya. Network/firewall issue ho sakta hai.")), 15000)
+      );
 
-    const ref = await Promise.race([writePromise, timeoutPromise]);
-    setLastDocId(ref.id);
-    setView("payment");
-  }catch(err){
-    alert("Submit error: " + err.message);
-    console.error("SUBMIT FAILED:", err);
-  }finally{
-    setSubmitting(false);
+      const ref = await Promise.race([writePromise, timeoutPromise]);
+      setLastDocId(ref.id);
+      setView("payment");
+    }catch(err){
+      alert("Submit error: " + err.message);
+      console.error("SUBMIT FAILED:", err);
+    }finally{
+      setSubmitting(false);
+    }
   }
-}
 
   async function confirmPayment(){
     if(!tid.trim()){ alert("Transaction ID likhein!"); return; }
