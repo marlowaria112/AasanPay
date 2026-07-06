@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { initializeApp } from "firebase/app";
 import {
-  getFirestore, collection, addDoc,
-  getDocs, doc, updateDoc, query, orderBy, where
+  initializeFirestore, collection, setDoc,
+  getDocs, getDoc, doc, updateDoc, query, orderBy
 } from "firebase/firestore";
 import {
   getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
@@ -17,16 +17,18 @@ import {
 } from "lucide-react";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCwt-pj6QUItIOM0KbS-CejZH8kRdzlEus",
-  authDomain: "aasanpay-9c3a0.firebaseapp.com",
-  projectId: "aasanpay-9c3a0",
-  storageBucket: "aasanpay-9c3a0.firebasestorage.app",
-  messagingSenderId: "925086196881",
-  appId: "1:925086196881:web:c1c4ec954868109e52cb30",
+  apiKey: "AIzaSyBGIr-D9LUy6H3Lu8HPFx2Yw7v0-YaLr6g",
+  authDomain: "aasanpay-v2.firebaseapp.com",
+  projectId: "aasanpay-v2",
+  storageBucket: "aasanpay-v2.firebasestorage.app",
+  messagingSenderId: "535933204500",
+  appId: "1:535933204500:web:3e9b0a8d840b9de9d4cf01",
 };
 
 const firebaseApp = initializeApp(firebaseConfig);
-const db = getFirestore(firebaseApp);
+const db = initializeFirestore(firebaseApp, {
+  experimentalAutoDetectLongPolling: true,
+});
 const auth = getAuth(firebaseApp);
 
 const FONT = `@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');`;
@@ -215,7 +217,7 @@ export default function AasanPay(){
     setSubmitting(true);
     const newAppId = generateAppId();
     try{
-      const writePromise = addDoc(collection(db,"applications"),{
+      const writePromise = setDoc(doc(db,"applications",newAppId),{
         ...form,
         applicationId: newAppId,
         status:"Pending",
@@ -226,8 +228,8 @@ export default function AasanPay(){
       const timeoutPromise = new Promise((_, reject) =>
         setTimeout(() => reject(new Error("TIMEOUT: Server ne 15 second mein response nahi diya. Network/firewall issue ho sakta hai.")), 15000)
       );
-      const ref = await Promise.race([writePromise, timeoutPromise]);
-      setLastDocId(ref.id);
+      await Promise.race([writePromise, timeoutPromise]);
+      setLastDocId(newAppId);
       setAppId(newAppId);
       setView("payment");
     }catch(err){
@@ -253,10 +255,10 @@ export default function AasanPay(){
     setStatusError("");
     setStatusResult(null);
     try{
-      const q=query(collection(db,"applications"),where("applicationId","==",statusId.trim().toUpperCase()));
-      const snap=await getDocs(q);
-      if(snap.empty){ setStatusError("Koi application nahi mili is ID se. Dobara check karein."); }
-      else{ setStatusResult({id:snap.docs[0].id,...snap.docs[0].data()}); }
+      const code = statusId.trim().toUpperCase();
+      const snap = await getDoc(doc(db,"applications",code));
+      if(!snap.exists()){ setStatusError("Koi application nahi mili is ID se. Dobara check karein."); }
+      else{ setStatusResult({id:snap.id,...snap.data()}); }
     }catch(err){ setStatusError("Error: "+err.message); }
     setStatusLoading(false);
   }
