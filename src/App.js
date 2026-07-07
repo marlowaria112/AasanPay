@@ -170,7 +170,7 @@ function Field({ icon: Icon, label, children }) {
 const inp = { width: "100%", background: "#FFF", border: "2px solid #E2E8F0", borderRadius: 10, padding: "13px 14px", color: "#111827", fontSize: 15, fontFamily: "'Inter',sans-serif", outline: "none", boxSizing: "border-box", transition: "border-color .2s" };
 const B = function(x) { x = x || {}; return Object.assign({ border: "none", borderRadius: 10, fontWeight: 600, cursor: "pointer", fontFamily: "'Inter',sans-serif" }, x); };
 
-export default function AasanPay() {
+export default function App(){
   const [view, setView] = useState("landing");
   const [adminEmail, setAdminEmail] = useState("");
   const [adminPass, setAdminPass] = useState("");
